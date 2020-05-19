@@ -6,8 +6,9 @@ import $ from 'jquery';
 
 const data = require('../../../db/data.json');
 
-const PORT_1 = process.env.PRODUCT_PORT || 3001;
-const url = `http://127.0.0.1:${PORT_1}/api/products/`
+
+const url = `http://127.0.0.1:3001/api/products/`
+//const url = `http://54.82.54.7:3001/api/products/`
 
 class App extends Component {
   constructor(props) {
@@ -17,8 +18,11 @@ class App extends Component {
     }
   }
 
+
   // Fetches a random product from the database
   componentDidMount() {
+    console.log('%cHIRE ME! ', 'color: red');
+    console.log('https://www.linkedin.com/in/robertheler/');
     let randomId;
 
     // to fetch a random product, uncomment this

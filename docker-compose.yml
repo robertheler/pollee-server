@@ -1,7 +1,8 @@
 version: "2"
 services:
   web:
-    build: .
+    image: robertheler/fec-solo
+    #build: .
     ports:
       - "3001:3001"
     depends_on:
@@ -9,4 +10,4 @@ services:
   mongo:
     image: mongo
     ports:
-      - "27017:2701"
+      - "27017:27017"
