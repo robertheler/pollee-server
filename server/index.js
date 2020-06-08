@@ -1,47 +1,59 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const path = require("path");
-const router = require("./router.js");
-const compression = require('compression')
+const express = require('express');
+const path = require('path');
+const db = require('../database/index.js');
+//const cors = require('cors');
 
-// Instantiate the express server
 const app = express();
 
-// create and use application/json parser
-app.use(bodyParser.json());
+const publicFolder = path.join(__dirname, '/..', 'components');
 
-// enable cross-origin resource sharing CORS
-app.use(cors());
-app.use(compression());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+//app.use(cors());
 
-let setCache = function (req, res, next) {
-  // you only want to cache for GET requests
-  if (req.method == 'GET') {
-    res.set('Cache-control', `public, max-age=300`)
-  } else {
-    // for the other requests set strict no caching parameters
-    res.set('Cache-control', `no-store, no-cache, max-age=0`)
-  }
-  next();
-}
+app.use(express.static(publicFolder));
 
-// now call the new middleware function in your app
+app.listen(3001, () => {
+  console.log('Server listening on port 3001');
+});
 
-app.use(setCache)
+app.get('/api/polls/:by', (req, res) => {
+  db.getPoll(req.params.by, (err, results) => {
+    if (err) {
+      res.status(404).send(err);
+    } else {
+      res.status(200).send(results);
+    }
+  });
+});
 
-// Set a constant for the port that our express server will listen on
-const PORT_1 = process.env.PRODUCT_PORT || 3001;
+app.post('/api/polls', (req, res) => {
+  console.log(req.body);
+  db.postPoll(req.body, (err, results) => {
+    if (err) {
+      res.status(404).send(err);
+    } else {
+      res.status(201).end();
+    }
+  });
+});
 
-// app.get('*.js', (req, res, next) => {
-//   req.url = req.url + '.gz';
-//   res.set('Content-Encoding', 'gzip');
-//   next();
-// });
+app.patch('/api/polls/:id/:user/:vote', (req, res) => {
+  db.patchPoll(Number(req.params.id), req.params.user, Number(req.params.vote), (err, results) => {
+    if (err) {
+      res.status(404).send(err);
+    } else {
+      res.status(204).send(results);
+    }
+  });
+});
 
-app.use(express.static(path.join(__dirname, "../client/dist")));
-app.use("/api/products", router);
-// Start the server on the provided port
-app.listen(PORT_1, () =>
-  console.log(`Listening on port: http://localhost:${PORT_1}`)
-);
+app.post('/api/users', (req, res) => {
+  db.postUsers(req.body, (err, results) => {
+    if (err) {
+      res.status(404).send(err);
+    } else {
+      res.status(201).send(results);
+    }
+  });
+});

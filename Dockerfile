@@ -13,7 +13,7 @@ RUN npm install
 
 EXPOSE 3001
 
-CMD [ "npm", "run", "start-container" ]
+CMD [ "npm", "run", "start" ]
 # "start-container": "npm run seed-database && npm run start"
 # seed-database should be first!
 # make sure database is closed otherwise npm run won't be executed

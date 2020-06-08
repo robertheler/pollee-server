@@ -1,13 +1,13 @@
 version: "2"
 services:
-  web:
-    image: robertheler/fec-solo
-    #build: .
+  server:
+    build: .
     ports:
       - "3001:3001"
-    depends_on:
-      - mongo
-  mongo:
-    image: mongo
+  postgres:
+    image: postgres
     ports:
-      - "27017:27017"
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "pollee"
+      POSTGRES_HOST_AUTH_METHOD: "trust"
